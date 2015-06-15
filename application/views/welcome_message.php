@@ -70,11 +70,15 @@
 	<h1>Welcome to CodeIgniter!</h1>
 
 	<div id="body">
-		<form>
-			<input type="file" name="userfile" size="20" />
+
+		<?php if(isset($error)):?>
+		<p>Fail to upload file</p>				
+		<?php endif; ?>
+		<form action = "<?php echo site_url('import-data');?>" method = "POST" enctype="multipart/form-data" >
+			<input type = "file"  name="userfile"><br>
+			<input type = "submit" value = "upload">
 		</form>
 
-	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</p>
 </div>
 
 </body>

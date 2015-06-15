@@ -39,6 +39,8 @@
 */
 
 $route['default_controller'] = "welcome";
+$route['import-data'] = "welcome/import_data";
+
 $route['404_override'] = '';
 
 

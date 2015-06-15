@@ -34,7 +34,8 @@ class Welcome extends CI_Controller {
             $file_path = $uploaded_data['full_path'];
         	$data = $this->uploader($file_name);
 
-        	print_r($data);
+        	$this->user_model->upload_users($data);
+        	echo "uploaded successful";
         }       
 	}
 
@@ -52,26 +53,40 @@ class Welcome extends CI_Controller {
 		 
 		//get only the Cell Collection
 		$cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
+
+		$members_list = array();
+		$counter = 0;
 		 
 		//extract to a PHP readable array format
 		foreach ($cell_collection as $cell) {
 		    $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
 		    $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
 		    $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
+
+		    
 		 
 		    //header will/should be in row 1 only. of course this can be modified to suit your need.
-		    if ($row == 1) {
-		        $header[$row][$column] = $data_value;
-		    } else {
-		        $arr_data[$row][$column] = $data_value;
-		    }
-		}
-		 
-		//send the data in an array format
-		$data['header'] = $header;
-		$data['values'] = $arr_data;
+		    if ($row > 1) {
+		        $arr_data[$row][$column] = $data_value;	       
 
-		return $arr_data;
+		    } 
+
+
+		}
+		$member = array();
+
+		foreach ($arr_data as $data) {
+			$member['name'] = $data['A'];
+			$member['phone_number'] = $data['B'];
+			$member['email'] = $data['C'];
+
+			$members_list[$counter] = $member;
+			$counter ++;
+		}
+		
+		//$data['values'] = $arr_data;
+
+		return $members_list;
 	}
 }
 

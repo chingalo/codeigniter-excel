@@ -34,8 +34,45 @@ class Welcome extends CI_Controller {
             $file_path = $uploaded_data['full_path'];
         	$data = $this->uploader($file_name);
 
-        	$this->user_model->upload_users($data);
-        	echo "uploaded successful";
+        	
+
+        	$uploaded_data = 0;
+        	$not_uploaded_data = 0;
+
+        	foreach ($data as $user_data) {
+        		
+        		$email = $user_data['C'];
+        		$name = $user_data['C'];
+        		$phone_number = "";
+
+        		if (isset($user_data['B'])) {
+        			
+        			$phone_number = $user_data['B'];
+        		}
+
+        		$user_checker = $this->user_model->check_user($email);
+        		if (! $user_checker) {
+        			
+        			$insert_data = array(
+        				'email' => $email,
+        				'name' => $name,
+        				'phone_number' => $phone_number,
+        				);
+
+        			$this->user_model->upload_user($insert_data);
+        			$uploaded_data ++;
+        		}
+        		else{
+
+        			$not_uploaded_data ++;
+        		}
+        	}
+
+        	echo "uploaded_data ::: ".$uploaded_data;
+        	echo "<br>";
+        	echo "not_uploaded_data ::: ".$not_uploaded_data;
+
+
         }       
 	}
 
@@ -53,9 +90,6 @@ class Welcome extends CI_Controller {
 		 
 		//get only the Cell Collection
 		$cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
-
-		$members_list = array();
-		$counter = 0;
 		 
 		//extract to a PHP readable array format
 		foreach ($cell_collection as $cell) {
@@ -70,23 +104,11 @@ class Welcome extends CI_Controller {
 		        $arr_data[$row][$column] = $data_value;	       
 
 		    } 
-
-
-		}
-		$member = array();
-
-		foreach ($arr_data as $data) {
-			$member['name'] = $data['A'];
-			$member['phone_number'] = $data['B'];
-			$member['email'] = $data['C'];
-
-			$members_list[$counter] = $member;
-			$counter ++;
 		}
 		
-		//$data['values'] = $arr_data;
+		
 
-		return $members_list;
+		return $arr_data;
 	}
 }
 

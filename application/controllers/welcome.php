@@ -31,9 +31,11 @@ class Welcome extends CI_Controller {
         	$uploaded_data = $this->upload->data(); 
             $file_name = $uploaded_data['file_name'];
 
-            $file_path = $uploaded_data['full_path'];
         	$data = $this->uploader($file_name);
 
+            //delete uploaded file for the server
+            $full_path './uploads/'.$file_name;
+            unlink($file_path);
         	
 
         	$uploaded_data = 0;
